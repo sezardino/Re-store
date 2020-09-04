@@ -1,11 +1,14 @@
 import React from 'react';
-import ErrorBoundary from '../error-boundary';
+import {Switch, Route} from 'react-router-dom';
 
-const App = () => {
+import {CartPage, HomePage} from '../pages';
+
+const App = (props) => {
 	return (
-		<ErrorBoundary>
-			<p>Hello World</p>
-		</ErrorBoundary>
+		<Switch>
+			<Route path="/" exact component={HomePage} />
+			<Route path="/cart" component={CartPage} />
+		</Switch>
 	);
 };
 
