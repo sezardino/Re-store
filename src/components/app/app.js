@@ -4,7 +4,7 @@ import {Switch, Route} from 'react-router-dom';
 import ShopHeader from '../shop-header';
 import {CartPage, HomePage} from '../pages';
 
-const App = (props) => {
+const App = () => {
 	return (
 		<main role="main" className="container">
 			<ShopHeader numItems={3} total={100} />
