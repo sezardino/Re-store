@@ -1,7 +1,7 @@
 const ActionType = {
-	booksLoaded: 'BOOKS_LOADED',
-	booksRequest: 'BOOKS_REQUEST',
-	booksError: 'BOOKS_ERROR',
+	FETCH_BOOKS_REQUEST: 'FETCH_BOOKS_REQUEST',
+	FETCH_BOOKS_SUCCESS: 'FETCH_BOOKS_SUCCESS',
+	FETCH_BOOKS_FAILURE: 'FETCH_BOOKS_FAILURE',
 };
 
 export {ActionType};
