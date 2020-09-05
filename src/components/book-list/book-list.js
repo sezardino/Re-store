@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withBookService} from '../hoc';
-import BookListItem from '../book-list-item';
 import {ActionCreator} from '../../actions/';
+
+import BookListItem from '../book-list-item';
+import Spinner from '../spinner';
 
 import './book-list.css';
 
@@ -14,9 +16,14 @@ class BookList extends Component {
 	}
 
 	render() {
-		const {books} = this.props;
+		const {books, loading} = this.props;
+
+		if (loading) {
+			return <Spinner />;
+		}
+
 		return (
-			<ul>
+			<ul className="book-list">
 				{books.map((book) => {
 					return (
 						<li key={book.id}>
@@ -29,9 +36,9 @@ class BookList extends Component {
 	}
 }
 
-const mapStateToProps = ({books}) => ({books});
+const mapStateToProps = ({books, loading}) => ({books, loading});
 const mapDispatchToProps = (dispatch) => ({
-	booksLoad: dispatch(ActionCreator.booksLoad),
+	booksLoad: (books) => dispatch(ActionCreator.booksLoad(books)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withBookService(BookList));
