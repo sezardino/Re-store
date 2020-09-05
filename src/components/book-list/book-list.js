@@ -9,18 +9,28 @@ import ErrorIndicator from '../error-indicator';
 
 import './book-list.css';
 
-class BookList extends Component {
+const BookList = ({books, onButtonClick}) => {
+	return (
+		<ul className="book-list">
+			{books.map((book) => {
+				return (
+					<li key={book.id}>
+						<BookListItem book={book} onButtonClick={() => onButtonClick(book.id)} />
+					</li>
+				);
+			})}
+		</ul>
+	);
+};
+
+class BookListContainer extends Component {
 	componentDidMount() {
-		const {bookstore, booksLoad, booksRequest, booksError} = this.props;
-		booksRequest();
-		bookstore
-			.getBooks()
-			.then((data) => booksLoad(data))
-			.catch((error) => booksError(error));
+		const {fetchBooks} = this.props;
+		fetchBooks();
 	}
 
 	render() {
-		const {books, loading, error} = this.props;
+		const {books, loading, error, toCartHandler} = this.props;
 
 		if (loading) {
 			return <Spinner />;
@@ -30,25 +40,21 @@ class BookList extends Component {
 			return <ErrorIndicator />;
 		}
 
-		return (
-			<ul className="book-list">
-				{books.map((book) => {
-					return (
-						<li key={book.id}>
-							<BookListItem book={book} />
-						</li>
-					);
-				})}
-			</ul>
-		);
+		return <BookList books={books} onButtonClick={toCartHandler} />;
 	}
 }
 
 const mapStateToProps = ({books, loading, error}) => ({books, loading, error});
-const mapDispatchToProps = (dispatch) => ({
-	booksRequest: () => dispatch(ActionCreator.booksRequest()),
-	booksLoad: (books) => dispatch(ActionCreator.booksLoad(books)),
-	booksError: (error) => dispatch(ActionCreator.booksError(error)),
+const mapDispatchToProps = (dispatch, ownProps) => ({
+	fetchBooks: () => {
+		const {bookstore} = ownProps;
+		dispatch(ActionCreator.FETCH_BOOKS_REQUEST());
+		bookstore
+			.getBooks()
+			.then((data) => dispatch(ActionCreator.FETCH_BOOKS_SUCCESS(data)))
+			.catch((error) => dispatch(ActionCreator.FETCH_BOOKS_FAILURE(error)));
+	},
+	toCartHandler: (id) => dispatch(ActionCreator.ADD_BOOK_TO_CART(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withBookService(BookList));
+export default withBookService(connect(mapStateToProps, mapDispatchToProps)(BookListContainer));
