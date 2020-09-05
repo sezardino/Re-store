@@ -11,8 +11,7 @@ import './book-list.css';
 class BookList extends Component {
 	componentDidMount() {
 		const {bookstore, booksLoad} = this.props;
-		const data = bookstore.getBooks();
-		booksLoad(data);
+		bookstore.getBooks().then((data) => booksLoad(data));
 	}
 
 	render() {
